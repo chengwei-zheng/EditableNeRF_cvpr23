@@ -1,4 +1,4 @@
-# HyperNeRF: A Higher-Dimensional Representation for Topologically Varying Neural Radiance Fields
+# EditableNeRF: Editing Topologically Varying Neural Radiance Fields by Key Points
 
 This is the code for "HyperNeRF: A Higher-Dimensional Representation for Topologically Varying Neural Radiance Fields".
 
@@ -9,24 +9,19 @@ This is the code for "HyperNeRF: A Higher-Dimensional Representation for Topolog
 This codebase implements HyperNeRF using [JAX](https://github.com/google/jax),
 building on [JaxNeRF](https://github.com/google-research/google-research/tree/master/jaxnerf).
 
+## Overview
 
-## Demo
+- Train [Hypernerf](https://github.com/google/hypernerf) and obtain rendering results.
+- Run `data_process/k_points_detect.py` to detect key points.
+- Run `data_process/k_points_init_RAFT.py` based on [RAFT](https://github.com/princeton-vl/RAFT) to initialize key points in 2d.
+- Run `data_process/k_points_init_3d.py` to initialize key points in 3d.
+- Run `train.py` for EditableNeRF training.
+- Run `eval.py` for EditableNeRF evaluation and rendering.
 
-We provide an easy-to-get-started demo using Google Colab!
 
-These Colabs will allow you to train a basic version of our method using
-Cloud TPUs (or GPUs) on Google Colab.
+## Train Hypernerf
 
-Note that due to limited compute resources available, these are not the fully
-featured models and will train quite slowly and the quality will likely not be that great.
-If you would like to train a fully featured model, please refer to the instructions below
-on how to train on your own machine.
-
-| Description      | Link |
-| ----------- | ----------- |
-| Process a video into a dataset| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google/nerfies/blob/main/notebooks/Nerfies_Capture_Processing.ipynb)|
-| Train HyperNeRF| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google/hypernerf/blob/main/notebooks/HyperNeRF_Training.ipynb)|
-| Render HyperNeRF Videos| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google/hypernerf/blob/main/notebooks/HyperNeRF_Render_Video.ipynb)|
+Before running our method, you should run [Hypernerf](https://github.com/google/hypernerf) first, and many parts of our code rely on the virtual environments and the results of Hypernerf.
 
 
 ## Setup
@@ -35,7 +30,11 @@ The code can be run under any environment with Python 3.8 and above.
 
 We recommend using [Miniconda](https://docs.conda.io/en/latest/miniconda.html) and setting up an environment:
 
-    conda create --name hypernerf python=3.8
+    python k_points_init_RAFT.py \
+        --model=models/raft-things.pth \
+        --path=input_img \
+        --kp_file=kp_init \
+        --skip_prop=50 \
 
 Next, install the required packages:
 

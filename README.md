@@ -23,6 +23,8 @@ building on [JaxNeRF](https://github.com/google-research/google-research/tree/ma
 
 Before running our method, you should run [Hypernerf](https://github.com/google/hypernerf) first, and many parts of our code rely on the virtual environments and the results of Hypernerf.
 
+## Key Point Detection
+
 
 ## Setup
 The code can be run under any environment with Python 3.8 and above.

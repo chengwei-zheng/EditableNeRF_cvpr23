@@ -21,10 +21,16 @@ Before running our method, you should run [HyperNeRF](https://github.com/google/
 
 Please follow [HyperNeRF](https://github.com/google/hyperNeRF) to set up Python environments, prepare your dataset (or use the dataset we provide), and train a HyperNeRF.
 
-After training, you need to use this HyperNeRF to render a set of results, which will be used as inputs of EditableNeRF.
+After training, you need to use this HyperNeRF to render a set of results, which will be used as inputs of EditableNeRF. 
 
-- Depth images: direct outputs of HyperNeRF
-- 
+You can also train a HyperNeRF using our EditableNeRF code by setting the config file as `hypernerf_vrig_ds_2d.gin`. And the codes for saving the following images are already in our code (lines 147-154 in our `eval.py`).
+
+1. Depth images: direct outputs of HyperNeRF. You can save these images using: `np.save(f'your_path/depth_median_{item_id}.npy', model_out['med_depth'])` where `model_out` is the returned dictionary of HyperNeRF (e.g., line 126, line 264 in HyperNeRF's `eval.py`). You should render them in both the original input camera views and a fixed view (e.g., the view of the first frame).
+    
+2. Rendered maps for canonical points (hyperspace): for each pixel, its value in this map is the canonical coordinate of the corresponding surface point. Note this coordinate is in hyperspace, and these maps only need to be rendered in a fixed view. You can save these maps using `np.save(f'your_path/med_warped_points_{item_id}.npy', model_out['med_warped_points'].squeeze()])`, and replacing the `models.py` (line 544-549) of HyperNeRF with the one we provide as `data_process/models.py`.
+
+3. Rendered maps for 3d points: save these maps similarly using `np.save(f'your_path/med_points_{item_id}.npy', model_out['med_points'].squeeze()])`, in the original input camera views and a fixed view.
+
 
 We provide an example of these results in our dataset (TODO); please refer to it and make sure your data is in the correct format and consistent with ours.
 
@@ -35,7 +41,7 @@ Based on these rendering results, the next stage is to detect and initialize key
 
 ### 2.1 Key Point Detection
 
-First, run `data_process/k_points_detect.py` using `python k_points_detect.py` (or using Jupyter) in the same Python environment as the dataset processing stage in [HyperNeRF](https://github.com/google/hyperNeRF). You need to change the parameters in `k_points_detect.py` (line 16-20) to be consistent with those you used in HyperNeRF. 
+First, run `data_process/k_points_detect.py` using `python k_points_detect.py` (or using Jupyter) in the same Python environment as the dataset processing stage in [HyperNeRF](https://github.com/google/hyperNeRF). You need to change the parameters in `k_points_detect.py` (lines 16-20) to be consistent with those you used in HyperNeRF. 
 
 After that, you can find the detected key points and the **visualization results** in a new folder `data_process/kp_init`. Please check these results before you step into the next stage.
 
@@ -60,13 +66,13 @@ When it finished, you can find a new file `kp_2d_init.txt` in `data_process/kp_i
 
 Before starting training, the last step is initializing the key points in 3D based on their 2D positions.
 
-This can be done by running `data_process/k_points_init_3d.py` using `python k_points_init_3d.py` (or using Jupyter) again in the dataset processing environment in [HyperNeRF](https://github.com/google/hyperNeRF). Also, please remember to change the parameters in it (line 20-22).
+This can be done by running `data_process/k_points_init_3d.py` using `python k_points_init_3d.py` (or using Jupyter) again in the dataset processing environment in [HyperNeRF](https://github.com/google/hyperNeRF). Also, please remember to change the parameters in it (lines 20-22).
 
 
 
 ## 3. Training and Rendering
 
-Our training and rendering methods are similar with [HyperNeRF](https://github.com/google/hyperNeRF).
+Our training and rendering methods are similar to [HyperNeRF](https://github.com/google/hyperNeRF).
 
     python train.py \
         --base_folder ../out/save_demo \

@@ -142,10 +142,8 @@ def plot_images(*,
       image_utils.save_image(full_dir / f'rgb_{item_id}.png',
                              image_utils.image_to_uint8(rgb))
 
-      # ZCW save depth npy
-      if 0:
-        # if not full_dir.parent.exists():
-        #     full_dir.parent.mkdir(exist_ok=True, parents=True)
+      # ZCW save npy
+      if 1:
         # np.save(str(full_dir / f'depth_expected_{item_id}.npy'), depth_exp)
         np.save(str(full_dir / f'depth_median_{item_id}.npy'), depth_med)
 

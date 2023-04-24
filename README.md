@@ -31,50 +31,67 @@ We provide an example of these results in our dataset (TODO); please refer to it
 
 ## 2. Key Point Detection and Initialization
 
-Based on these rendering results, the next step is to detect and initialize key points.
+Based on these rendering results, the next stage is to detect and initialize key points.
 
-#### Key Point Detection
+### 2.1 Key Point Detection
 
-First, run `data_process/k_points_detect.py` using `python k_points_detect.py` (or using Jupyter) in the same Python environment as the dataset processing stage in [HyperNeRF](https://github.com/google/hyperNeRF). You need to change the parameters in `k_points_detect.py` to be consistent with those you used in HyperNeRF. 
+First, run `data_process/k_points_detect.py` using `python k_points_detect.py` (or using Jupyter) in the same Python environment as the dataset processing stage in [HyperNeRF](https://github.com/google/hyperNeRF). You need to change the parameters in `k_points_detect.py` (line 16-20) to be consistent with those you used in HyperNeRF. 
 
 After that, you can find the detected key points and the **visualization results** in a new folder `data_process/kp_init`. Please check these results before you step into the next stage.
 
-#### Key Point Initialization in 2D and Optical Flow Computing
+### 2.2 Key Point Initialization in 2D and Optical Flow Computing
 
 Then, use RAFT to initialize key points in 2D and compute the optical flow that will be used in EditableNeRF training.
 
-The `data_process/k_points_init_RAFT.py` is an expansion of the `demo.py` file in [RAFT](https://github.com/princeton-vl/RAFT), which can be run similarly as `demo.py` in [RAFT](https://github.com/princeton-vl/RAFT) based on its Python environment:
+The `data_process/k_points_init_RAFT.py` file is an expansion of the `demo.py` file in [RAFT](https://github.com/princeton-vl/RAFT), and it can be run similarly as `demo.py` in [RAFT](https://github.com/princeton-vl/RAFT) based on the Python environment used in RAFT:
 
     python k_points_init_RAFT.py \
         --model=models/raft-things.pth \
         --path=input_img_dir \
         --kp_file=kp_init \
-        --skip_prop=50 \
+        --skip_prop=50
 
-where `skip_prop` is the frame number $M$ for skipping propagation as in our paper. Set it to zero if you do not want to use skipping propagation.
+where `skip_prop` is the frame number $M$ for skipping propagation as in our paper (Sec. 3.3). Set it to zero if you do not want to use skipping propagation.
 
-When it finished, you can find a new file `kp_2d_init.txt` in `data_process/kp_init`, which is the initialized 2D key points, and a new folder `data_process/kp_init/flow`, which contains the optical flow that will be used in EditableNeRF training. Also, the **visualization results** are provided in `data_process/out`; check them if you find anything wrong.
+When it finished, you can find a new file `kp_2d_init.txt` in `data_process/kp_init`, which is the initialized 2D key points; and a new folder `data_process/kp_init/flow`, which contains the optical flow that will be used in EditableNeRF training. Also, the **visualization results** are provided in `data_process/out`; check them if you find anything wrong.
 
 
-#### Key Point Initialization in 3D
+### 2.3 Key Point Initialization in 3D
 
 Before starting training, the last step is initializing the key points in 3D based on their 2D positions.
 
-This can be done by running `data_process/k_points_init_3d.py` using `python k_points_init_3d.py` (or using Jupyter) again in the dataset processing environment in [HyperNeRF](https://github.com/google/hyperNeRF). Also, please remember to change the parameters in it.
+This can be done by running `data_process/k_points_init_3d.py` using `python k_points_init_3d.py` (or using Jupyter) again in the dataset processing environment in [HyperNeRF](https://github.com/google/hyperNeRF). Also, please remember to change the parameters in it (line 20-22).
 
 
 
 ## 3. Training and Rendering
 
-Our training and rendering methods are the same as [HyperNeRF](https://github.com/google/hyperNeRF).
+Our training and rendering methods are similar with [HyperNeRF](https://github.com/google/hyperNeRF).
 
+    python train.py \
+        --base_folder ../out/save_demo \
+        --gin_bindings="data_dir='../in/capture_demo'" \
+        --gin_configs configs/editablenerf_2p.gin
+
+    python eval.py \
+        --base_folder ../out/save_demo \
+        --gin_bindings="data_dir='../in/capture_demo'" \
+        --gin_configs configs/editablenerf_2p.gin
 
 ## Dataset
-TODO
+Coming soon ...
 
 
 ## (Optional) GUI
-`GUI_qt.py`
+Running `GUI_qt.py` further needs Qt5 installation:
+
+    pip install pyvista
+    pip install pyvistaqt
+    pip install pyqt5   
+
+Then run GUI by
+
+    python GUI_qt.py
 
 
 ## Citing

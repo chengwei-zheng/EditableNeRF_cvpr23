@@ -27,7 +27,7 @@ You can also train a HyperNeRF using our EditableNeRF code by setting the config
 
 1. Depth images: direct outputs of HyperNeRF. You can save these images using: `np.save(f'your_path/depth_median_{item_id}.npy', model_out['med_depth'])` where `model_out` is the returned dictionary of HyperNeRF (e.g., line 126, line 264 in HyperNeRF's `eval.py`). You should render them in both the original input camera views and a fixed view (e.g., the view of the first frame).
     
-2. Rendered maps for canonical points (hyperspace): for each pixel, its value in this map is the canonical coordinate of the corresponding surface point. Note this coordinate is in hyperspace, and these maps only need to be rendered in a fixed view. You can save these maps using `np.save(f'your_path/med_warped_points_{item_id}.npy', model_out['med_warped_points'].squeeze()])`, and replacing the `models.py` (line 544-549) of HyperNeRF with the one we provide as `data_process/models.py`.
+2. Rendered maps for canonical points (hyperspace): for each pixel, its value in this map is the canonical coordinate of the corresponding surface point. Note this coordinate is in hyperspace, and these maps only need to be rendered in a fixed view. You can save these maps using `np.save(f'your_path/med_warped_points_{item_id}.npy', model_out['med_warped_points'].squeeze()])`, and replacing the `models.py` of HyperNeRF with the one we provide as `data_process/models.py` (different in lines 544-549).
 
 3. Rendered maps for 3d points: save these maps similarly using `np.save(f'your_path/med_points_{item_id}.npy', model_out['med_points'].squeeze()])`, in the original input camera views and a fixed view.
 

@@ -53,13 +53,13 @@ The `data_process/k_points_init_RAFT.py` file is an expansion of the `demo.py` f
 
     python k_points_init_RAFT.py \
         --model=models/raft-things.pth \
-        --path=input_img_dir \
+        --path=input/rgb/1x \
         --kp_file=kp_init \
         --skip_prop=50
 
-where `skip_prop` is the frame number $M$ for skipping propagation as in our paper (Sec. 3.3). Set it to zero if you do not want to use skipping propagation.
+where `skip_prop` is the frame number $M$ for skipping propagation as in our paper (Sec. 3.3). Set it to zero if you do not want to use skipping propagation. Note that here you should use the original input images without downsampling.
 
-When it finished, you can find a new file `kp_2d_init.txt` in `data_process/kp_init`, which is the initialized 2D key points; and a new folder `data_process/kp_init/flow`, which contains the optical flow that will be used in EditableNeRF training. Also, the **visualization results** are provided in `data_process/out`; check them if you find anything wrong.
+When it finished, you can find a new file `kp_2d_init.txt` in `data_process/kp_init`, which is the initialized 2D key points; and a new folder `data_process/flow`, which contains the optical flow that will be used in EditableNeRF training. Also, the **visualization results** are provided in `data_process/out` and `data_process/kp_init/kp_visual`; check them if you find anything wrong.
 
 
 ### 2.3 Key Point Initialization in 3D
@@ -72,7 +72,25 @@ This can be done by running `data_process/k_points_init_3d.py` using `python k_p
 
 ## 3. Training and Rendering
 
+Input file should be like:
+
+    capture_demo
+        camera (same as HyperNeRF)
+        camera-paths (same as HyperNeRF)
+        data [output of k_points_init_3d.py]
+          ├─k_points_auto.txt
+          └─k_points_auto_coor_*.txt 
+        depth [output of HyperNeRF]
+          └─depth_median_*.npy
+        flow [output of k_points_init_RAFT.py]
+          └─flow_*.npy
+        rgb (same as HyperNeRF)
+        dataset.json (same as HyperNeRF)
+        metadata.json (same as HyperNeRF)
+        scene.json (same as HyperNeRF)
+
 Our training and rendering methods are similar to [HyperNeRF](https://github.com/google/hyperNeRF).
+
 
     python train.py \
         --base_folder ../out/save_demo \

@@ -15,10 +15,11 @@ from utils import flow_viz
 from utils.utils import InputPadder
 
 DEVICE = 'cuda'
-
+skip_prop_threshold = 5
 
 def load_image(imfile):
     img = np.array(Image.open(imfile)).astype(np.uint8)
+    img = img[..., 0:3]
     img = torch.from_numpy(img).permute(2, 0, 1).float()
     return img[None].to(DEVICE)
 
@@ -52,7 +53,7 @@ def demo(args):
     kp_file = args.kp_file
     skip_prop = int(args.skip_prop)
 
-    flow_file = os.path.join(kp_file, 'flow')
+    flow_file = os.path.join(kp_file, 'kp_visual')
     if not os.path.exists(flow_file):
         os.makedirs(flow_file)
     if not os.path.exists('out'):
@@ -66,6 +67,7 @@ def demo(args):
         frame_num = len(images)
 
         kp_2d_ref = np.load(kp_file + '/detect_kp_2d_ref.npy')
+        # kp_2d_ref = np.loadtxt(kp_file + '/detect_kp_2d_ref.txt')
         kp_num = kp_2d_ref.shape[0]
 
         reference_frames = np.atleast_1d(np.loadtxt(kp_file + '/reference_frame.txt', dtype=np.int32))
@@ -134,7 +136,7 @@ def demo(args):
 
                     # Compute confidence
                     conf_inv = np.linalg.norm(ref_rc - back_rc)
-                    if conf_inv < 10:
+                    if conf_inv < skip_prop_threshold and idx0 < 350:
                         print('replace', rc, 'with', for_rc, ', conf_inv:', conf_inv)
                         rc = np.array(for_rc)
                     else:
@@ -156,9 +158,11 @@ def demo(args):
 
         np.savetxt(kp_file + '/kp_2d_init.txt', all_kp_2d_init)
 
-        # Save flow for training
+        # Save flow for EditableNeRF training
         if not os.path.exists('flow'):
             os.makedirs('flow')
+
+        colmap_image_scale = int(args.colmap_scale)
         for idx, (imfile1, imfile2) in enumerate(zip(images[:-1], images[1:])):
             image1 = load_image(imfile1)
             image2 = load_image(imfile2)
@@ -170,9 +174,9 @@ def demo(args):
             flow_np = flow_up[0].permute(1, 2, 0).cpu().numpy().copy()
             # np.save(f'out/flow_{idx:06d}.npy', flow_np)
 
-            re_shape = (flow_np.shape[1] // 4, flow_np.shape[0] // 4)
+            re_shape = (flow_np.shape[1] // colmap_image_scale, flow_np.shape[0] // colmap_image_scale)
             flow_map = cv2.resize(flow_np, re_shape)  # (320, 180)
-            flow_map /= 4.0
+            flow_map /= colmap_image_scale
             np.save(f'flow/flow_{idx:06d}.npy', flow_map)
 
 
@@ -182,6 +186,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', help="dataset for evaluation")
     parser.add_argument('--kp_file', help="key point data file")
     parser.add_argument('--skip_prop', help="if use skipping propagation")
+    parser.add_argument('--colmap_scale', help="scalar used in COLMAP")
     parser.add_argument('--small', action='store_true', help='use small model')
     parser.add_argument('--mixed_precision', action='store_true', help='use mixed precision')
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')

@@ -55,7 +55,8 @@ The `data_process/k_points_init_RAFT.py` file is an expansion of the `demo.py` f
         --model=models/raft-things.pth \
         --path=input/rgb/1x \
         --kp_file=kp_init \
-        --skip_prop=50
+        --skip_prop=50 \
+        --colmap_scale=4
 
 where `skip_prop` is the frame number $M$ for skipping propagation as in our paper (Sec. 3.3). Set it to zero if you do not want to use skipping propagation. Note that here you should use the original input images without downsampling.
 

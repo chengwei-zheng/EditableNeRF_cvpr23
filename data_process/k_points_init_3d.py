@@ -9,6 +9,7 @@ from scipy.ndimage.filters import gaussian_filter
 from skimage.feature import peak_local_max
 import matplotlib.pyplot as plt
 # from matplotlib.patches import Circle
+from itertools import combinations
 
 from nerfies import camera as cam
 from nerfies import gpath
@@ -17,9 +18,9 @@ from nerfies import types
 from pathlib import Path
 
 # Change these parameters
-scene_root = 'your_path/in/capture_demo'  # @param {type: 'string'}
-ori_cmr_render_root = 'your_path/out/save_demo/renders/'  # @param {type: 'string'}
-scalar = 4.0  # @param {type: 'number'}
+scene_root = 'E:/hypernerf/hypernerf/in/syn_0503'  # @param {type: 'string'}
+ori_cmr_render_root = 'E:/hypernerf/hypernerf/out/syn_0503_ds16-6_reg1/renders-00/00100000/full/'  # @param {type: 'string'}
+scalar = 1.0  # @param {type: 'number'}
 
 
 def load_scene_info(
@@ -90,6 +91,7 @@ if 1:
   all_kp_2d_init = np.loadtxt('kp_init/kp_2d_init.txt')
   kp_num = all_kp_2d_init.shape[1] // 2
   frame_num = all_kp_2d_init.shape[0]
+  print('key point number: ', kp_num)
 
   k_points_auto = np.zeros((frame_num, 0), dtype=np.float64)
   for kp in range(kp_num):
@@ -121,3 +123,15 @@ if 1:
     np.savetxt('kp_init/k_points_auto_coor_' + str(kp) + '.txt', coor_data, delimiter='\n')
 
   np.savetxt('kp_init/k_points_auto.txt', k_points_auto)
+  print('done')
+
+# remove duplicate key points if necessary
+if 0:
+  kp_list = list(range(kp_num))
+  for (i, j) in list(combinations(kp_list, 2)):
+    kp_i = np.loadtxt('kp_init/k_points_auto_' + str(i) + '.txt')
+    kp_j = np.loadtxt('kp_init/k_points_auto_' + str(j) + '.txt')
+    diff = np.mean(np.abs(kp_i - kp_j))
+    print('Difference between kp ', i, ' and kp ', j, 'is', diff)
+    if diff < 0.02:
+      print('Duplicate key point: ', i, ' and ', j)

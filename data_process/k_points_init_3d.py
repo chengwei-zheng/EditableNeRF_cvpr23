@@ -18,8 +18,8 @@ from nerfies import types
 from pathlib import Path
 
 # Change these parameters
-scene_root = 'E:/hypernerf/hypernerf/in/syn_0503'  # @param {type: 'string'}
-ori_cmr_render_root = 'E:/hypernerf/hypernerf/out/syn_0503_ds16-6_reg1/renders-00/00100000/full/'  # @param {type: 'string'}
+scene_root = 'your_path/in/capture_demo'  # @param {type: 'string'}
+ori_cmr_render_root = 'your_path/out/save_demo/renders/'  # @param {type: 'string'}
 scalar = 1.0  # @param {type: 'number'}
 
 

@@ -32,7 +32,7 @@ You can also train a HyperNeRF using our EditableNeRF code by setting the config
 3. Rendered maps for 3d points: save these maps similarly using `np.save(f'your_path/med_points_{item_id}.npy', model_out['med_points'].squeeze()])`, in the original input camera views and a fixed view.
 
 
-We provide an example of these results in our dataset (TODO); please refer to it and make sure your data is in the correct format and consistent with ours.
+We provide an example of these results in our [dataset](#dataset) (in `capture_dice_cup.zip`); please refer to it and make sure your data is in the correct format and consistent with ours.
 
 
 ## 2. Key Point Detection and Initialization
@@ -103,8 +103,9 @@ Our training and rendering methods are similar to [HyperNeRF](https://github.com
         --gin_bindings="data_dir='../in/capture_demo'" \
         --gin_configs configs/editablenerf_2p.gin
 
-## Dataset
-Coming soon ...
+## <span id="dateset">Dataset<span>
+
+demo
 
 
 ## (Optional) GUI

@@ -105,7 +105,7 @@ Our training and rendering methods are similar to [HyperNeRF](https://github.com
 
 ## <span id="dateset">Dataset<span>
 
-demo
+Download at [Google Driver](https://drive.google.com/drive/folders/1ZDE_-vHyeHTZka7rp-IKlTxXMvxXaUwy?usp=sharing)
 
 
 ## (Optional) GUI

@@ -18,7 +18,7 @@ from nerfies import types
 from pathlib import Path
 
 # Change these parameters
-scene_root = 'your_path/in/capture_demo'  # @param {type: 'string'}
+scene_root = 'your_path/in/capture_demo/'  # @param {type: 'string'}
 ori_cmr_render_root = 'your_path/out/save_demo/renders/'  # @param {type: 'string'}
 scalar = 1.0  # @param {type: 'number'}
 

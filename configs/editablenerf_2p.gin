@@ -47,7 +47,7 @@ NerfModel.hyper_sheet_mlp_cls = @HyperSheetMLP
 # ZCW change
 NerfModel.hyper_use_warp_embed = False
 #NerfModel.hyper_use_BS_coeff = False
-NerfModel.load_kp_init_file = 'k_points_auto_2p.txt'
+NerfModel.load_kp_init_file = 'k_points_auto.txt'
 NerfModel.k_point_num = 2
 NerfModel.kp_dimension = 6
 hyper/GLOEmbed.num_dims = 6

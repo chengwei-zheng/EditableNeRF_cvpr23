@@ -102,6 +102,7 @@ Our training and rendering methods are similar to [HyperNeRF](https://github.com
         --base_folder ../out/save_demo \
         --gin_bindings="data_dir='../in/capture_demo'" \
         --gin_configs configs/editablenerf_2p.gin
+		
 
 ## <span id="dateset">Dataset<span>
 
@@ -115,9 +116,11 @@ Running `GUI_qt.py` further needs Qt5 installation:
     pip install pyvistaqt
     pip install pyqt5   
 
-Then run GUI by
+Then run GUI by 
 
     python GUI_qt.py
+	
+The current version of GUI only supports scenes containing one keypoint. For editing a scene containing multiple keypoints, please follow the comments in `encode_metadata()` from [evaluation.py](https://github.com/chengwei-zheng/EditableNeRF_cvpr23/blob/main/editablenerf/evaluation.py)
 
 
 ## Citing

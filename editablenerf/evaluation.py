@@ -33,6 +33,7 @@ def encode_metadata(model, params, metadata, idx = -1):
     model: a NerfModel.
     params: the parameters of the model.
     metadata: the metadata dict.
+    idx: frame index in editing
 
   Returns:
     A new metadata dict with the encoded embeddings.
@@ -52,7 +53,7 @@ def encode_metadata(model, params, metadata, idx = -1):
     encoded_metadata['encoded_hyper'] = model.apply(
           {'params': params}, metadata, method=model.encode_hyper_embed)
 
-  # ZCW edit warp & appearances
+  # --- For editing, use the following 10 lines to disable warp and appearance changes ---
   # print('change metadata to frame 0')
   # edit_metadata = {}  # or use metadata.copy()
   # edit_metadata['appearance'] = np.broadcast_to([0], metadata['appearance'].shape)
@@ -64,31 +65,28 @@ def encode_metadata(model, params, metadata, idx = -1):
   #   encoded_metadata['encoded_warp'] = model.apply(
   #       {'params': params}, edit_metadata, method=model.encode_warp_embed)
 
-  # ZCW edit hyper 2
-  # hyper_arr = np.loadtxt('../visual/edit_seq/dice_seq1.txt')  # 0918
+  # --- Method 1: Edit by loading keypoint position from .txt ---
+  # hyper_arr = np.loadtxt('../visual/edit_seq/dice_seq1.txt')
   # hyper_idx = int(idx)
   # if hyper_idx >= hyper_arr.shape[0]:
   #   print('END')
   #   input()
   # new_point = hyper_arr[hyper_idx]
 
-  # hyper0 = jnp.array([0.0E-01, -4.0E-01, 0.0E-01, 0, -6.0E-01, 0])  # 0111 h  [-8, 6] [-4, 6]
+  # --- Method 2: Edit by interpolation, refer to input/data/k_points_auto.txt for proper values ---
+  # hyper0 = jnp.array([0.0E-01, -4.0E-01, 0.0E-01, 0, -6.0E-01, 0])  # 6 coordinates for 2 keypoints
   # hyper1 = jnp.array([0.0E-01, -4.0E-01, 0.0E-01, 0, 6.0E-01, 0])
-  # # hyper0 = jnp.array([0.0E-01, -4.0E-01, 0.0E-01, 0, -4.0E-01, 0, 0, 0, 0])  # 0111
-  # # hyper1 = jnp.array([0.0E-01, 4.16E-01, 0.0E-01, 0, 6.0E-01, 0, 0, 0, 0])
   # hyper_w = float(idx) / 100.0
   # if hyper_w > 1:
   #   hyper_w = 1
   #   print('END')
   #   input()
   # new_point = hyper_w * hyper1 + (1 - hyper_w) * hyper0
-  #
-  # print(idx, ' change hyper to ', new_point)
+  
+  # --- Editing ---
+  # print(idx, ' change keypoint to ', new_point)
   # pix = jnp.array(new_point)
-  # hyperdim = 6   # !!!! hyper dim !!!!      34 * 3
-  # if new_point.shape[0] != hyperdim:
-  #   raise ValueError('new_point.shape[0] != hyperdim')
-  # override_shape = (*encoded_metadata["encoded_hyper"].shape[:-1], hyperdim)
+  # override_shape = (*encoded_metadata["encoded_hyper"].shape[:-1], new_point.shape[0])
   # encoded_metadata['encoded_hyper'] = jnp.broadcast_to(pix, override_shape)
 
   return encoded_metadata

@@ -106,7 +106,7 @@ Our training and rendering methods are similar to [HyperNeRF](https://github.com
 
 ## <span id="dateset">Dataset<span>
 
-Download at [Google Driver](https://drive.google.com/drive/folders/1ZDE_-vHyeHTZka7rp-IKlTxXMvxXaUwy?usp=sharing)
+Download at [Google Driver](https://drive.google.com/drive/folders/1ZDE_-vHyeHTZka7rp-IKlTxXMvxXaUwy?usp=sharing).
 
 
 ## (Optional) GUI
@@ -116,11 +116,11 @@ Running `GUI_qt.py` further needs Qt5 installation:
     pip install pyvistaqt
     pip install pyqt5   
 
-Then run GUI by 
+Then run GUI by:
 
     python GUI_qt.py
 	
-The current version of GUI only supports scenes containing one keypoint. For editing a scene containing multiple keypoints, please follow the comments in `encode_metadata()` from [evaluation.py](https://github.com/chengwei-zheng/EditableNeRF_cvpr23/blob/main/editablenerf/evaluation.py)
+The current version of GUI only supports scenes containing one keypoint. For editing a scene containing multiple keypoints, please follow the comments in `encode_metadata()` from [evaluation.py](https://github.com/chengwei-zheng/EditableNeRF_cvpr23/blob/main/editablenerf/evaluation.py).
 
 
 ## Citing
